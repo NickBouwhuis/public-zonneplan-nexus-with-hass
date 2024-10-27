@@ -62,9 +62,10 @@
             <p><span id="last-updated" class="last-updated">Updating...</span></p>
             <div>Total Capacity: 20 kWh</div>
             <div>In use since October 24th 2024 11:30 CEST</div>
+            <br>
             <div><a href="https://services.tenergy.nl/public.aspx/actualimbalanceprices" class="link-style">Current Imbalance Prices</a></div>
             <div><a href="https://www.zonneplan.nl/thuisbatterij/nexus-demo" class="link-style">Zonneplan Demo Setup</a></div>
-            <div><a href="https://github.com/NickBouwhuis/public-zonneplan-nexus-with-hass" class="link-style">Github</a></div>
+            <div><a href="https://github.com/NickBouwhuis/public-zonneplan-nexus-with-hass" class="link-style">View source on Github</a></div>
         </div>
     </div>
 
@@ -114,11 +115,17 @@
                                 label: 'Power (W)',
                                 data: historyData.chart_power_values,
                                 borderColor: '#04A35B',
-                                fill: false,
+                                backgroundColor: '#04A35B',
+                                fill: true,
                             }]
                         },
                         options: {
                             responsive: true,
+                            elements: {
+                                point: {
+                                    radius: 0
+                                },
+                            },
                             scales: {
                                 x: {
                                     title: { display: true, text: 'Time' }
