@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Status</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">Nick's Zonneplan Nexus</div>
+
+        <!-- Current Power Status with Glowing Dot -->
+        <div class="status-item">
+            <div class="label">Current Power</div>
+            <div class="current-power-row">
+                <div class="glowing-dot" id="glowing-dot"></div>
+                <div class="power-status" id="power-status"></div>
+            </div>
+        </div>
+
+        <div class="status-item">
+            <div class="label">Battery Percentage</div>
+            <div class="battery-level">
+                <div class="battery-bar" id="battery-bar"></div>
+                <div class="battery-percentage-text" id="battery-percentage-text"></div>
+            </div>
+        </div>
+
+        <div class="status-item">
+            <div class="label">Battery Power History</div>
+            <canvas id="batteryChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="status-row">
+            <!-- Charged and Discharged Today -->
+            <div class="status-item">
+                <div class="label">Charged Today</div>
+                <div class="value" id="charged-today"></div>
+            </div>
+
+            <div class="status-item">
+                <div class="label">Discharged Today</div>
+                <div class="value" id="discharged-today"></div>
+            </div>
+
+            <!-- Earnings -->
+            <div class="status-item">
+                <div class="label">Today Earned</div>
+                <div class="value" id="today-earned"></div>
+            </div>
+
+            <div class="status-item">
+                <div class="label">Total Earned</div>
+                <div class="value" id="total-earned"></div>
+            </div>
+        </div>
+
+        <!-- Last Updated Timestamp -->
+        <div class="footer">
+            <p><span id="last-updated" class="last-updated">Updating...</span></p>
+            <div>Total Capacity: 20 kWh</div>
+            <div>In use since October 24th 2024 11:30 CEST</div>
+            <div><a href="https://services.tenergy.nl/public.aspx/actualimbalanceprices" class="link-style">Current Imbalance Prices</a></div>
+            <div><a href="https://www.zonneplan.nl/thuisbatterij/nexus-demo" class="link-style">Zonneplan Demo Setup</a></div>
+        </div>
+    </div>
+
+    <script>
+        let batteryChart;
+
+        // Function to format the current time for the "Last Updated" timestamp
+        function formatTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        // Function to fetch data and update the DOM and chart
+        async function updateData() {
+            try {
+                const response = await fetch('battery_data.php');
+                const data = await response.json();
+
+                // Update current data
+                const currentData = data.current_data;
+                document.getElementById("power-status").innerText = `${currentData.power_status} (${currentData.power_value})`;
+                document.getElementById("glowing-dot").style.backgroundColor = currentData.dot_color;
+                document.getElementById("glowing-dot").style.boxShadow = `0 0 10px ${currentData.dot_color}`;
+
+                document.getElementById("battery-bar").style.width = `${currentData.percentage}%`;
+                document.getElementById("battery-percentage-text").innerText = `${currentData.percentage}%`;
+
+                document.getElementById("charged-today").innerText = `${currentData.charged_today} kWh`;
+                document.getElementById("discharged-today").innerText = `${currentData.discharged_today} kWh`;
+                document.getElementById("today-earned").innerText = currentData.today_earned;
+                document.getElementById("total-earned").innerText = currentData.total_earned;
+
+                // Update history chart data
+                const historyData = data.history_data;
+                const ctx = document.getElementById('batteryChart').getContext('2d');
+
+                if (batteryChart) {
+                    batteryChart.data.labels = historyData.chart_labels;
+                    batteryChart.data.datasets[0].data = historyData.chart_power_values;
+                    batteryChart.update();
+                } else {
+                    batteryChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: historyData.chart_labels,
+                            datasets: [{
+                                label: 'Power (W)',
+                                data: historyData.chart_power_values,
+                                borderColor: '#04A35B',
+                                fill: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    title: { display: true, text: 'Time' }
+                                },
+                                y: {
+                                    title: { display: true, text: 'Power (W)' },
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Update the "Last Updated" time and add an animation class
+                const lastUpdatedElement = document.getElementById("last-updated");
+                lastUpdatedElement.innerText = `Last Updated: ${formatTime()}`;
+                lastUpdatedElement.classList.add("fade-in");
+
+                // Remove the animation class after it runs
+                setTimeout(() => {
+                    lastUpdatedElement.classList.remove("fade-in");
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error updating data:', error);
+            }
+        }
+
+        // Fetch data on initial load and every minute
+        updateData();
+        setInterval(updateData, 60000);
+    </script>
+</body>
+</html>
+

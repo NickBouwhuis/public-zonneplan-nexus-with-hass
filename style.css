@@ -1,0 +1,141 @@
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #0A0A0A;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background-color: #1C1C1E;
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.heading {
+    font-size: 36px;
+    color: #04A35B;
+    margin-bottom: 40px;
+}
+
+.status-item {
+    margin-bottom: 30px;
+}
+
+.status-item .label {
+    font-size: 18px;
+    color: #888888;
+    margin-bottom: 10px;
+}
+
+.status-item .value {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Flexbox Layout for Row Items */
+.current-power-row {
+    margin-bottom: 20px;
+}
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+/* Battery Percentage Bar */
+.battery-level {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4D4D4D;
+    padding: 10px;
+    border-radius: 12px;
+    width: 100%;
+    position: relative;
+    font-weight: bold;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.battery-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: #04A35B;
+    border-radius: 12px;
+    transition: width 0.5s ease-in-out;
+}
+
+.battery-percentage-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 2;
+    position: relative;
+    padding-right: 10px;
+}
+
+/* Power Status and Glowing Dot */
+.glowing-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 10px currentColor;
+    display: inline-block;
+}
+
+.power-status {
+    font-size: 28px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Footer */
+.footer {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #cccccc;
+}
+
+/* Timestamp Styling */
+.last-updated {
+    font-size: 14px;
+    color: #cccccc;
+    margin-bottom: 5px;
+    opacity: 0.8;
+}
+
+/* Fade-in Effect for Last Updated Timestamp */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Link Styling */
+.link-style {
+    color: #04A35B;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.link-style:hover {
+    color: #00FF85;
+}
+
